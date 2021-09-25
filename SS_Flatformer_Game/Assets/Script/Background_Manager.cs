@@ -13,7 +13,7 @@ public class Background_Manager : MonoBehaviour
     public SpriteRenderer BG_Render; //배경 스프라이트 정보
 
 
-
+    
     void Start()
     {
         Player_Script = Player.GetComponent<Player_CT>();
