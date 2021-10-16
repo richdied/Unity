@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8421458170528590454, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+  m_Sprite: {fileID: 2192450021786810173, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,18 +98,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.000000059604645, y: 0}
+  m_Offset: {x: 0.01978767, y: 0.007914901}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.3333334, y: 1.125}
+    oldSize: {x: 2.75, y: 2.75}
     newSize: {x: 1.3333334, y: 1.125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0413555, y: 1.125}
+  m_Size: {x: 2.758931, y: 2.6605284}
   m_EdgeRadius: 0
 --- !u!50 &3790580656674993318
 Rigidbody2D:
@@ -148,12 +148,12 @@ MonoBehaviour:
   Info:
     HP: 0
     Max_HP: 50
-    Speed: 0
+    Speed: 0.5
     Shooting_Cool: 1
     Limit_Bullet: 50000
     Shoot_Ready: 1
     E_Bullet: {fileID: 3641519516946524696, guid: c1c04b3f2de57e447a4d5d2d7a57dc13, type: 3}
-    E_Normal_Image: {fileID: -8421458170528590454, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
-    E_Hit_Image: {fileID: 3714015224569861163, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+    E_Normal_Image: {fileID: -7537196482120660328, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
+    E_Hit_Image: {fileID: -7945901444079236628, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   Player: {fileID: 0}
   My_Render: {fileID: 0}

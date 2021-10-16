@@ -148,7 +148,7 @@ MonoBehaviour:
   Info:
     HP: 0
     Max_HP: 50
-    Speed: 0
+    Speed: 1
     Shooting_Cool: 1
     Limit_Bullet: 50000
     Shoot_Ready: 1

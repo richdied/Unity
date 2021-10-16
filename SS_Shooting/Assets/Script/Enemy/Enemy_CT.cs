@@ -136,32 +136,24 @@ public class Enemy_CT : MonoBehaviour
             Instantiate(Info.E_Bullet, new Vector2(transform.position.x - 0.35f, transform.position.y - 0.5f),
                Quaternion.AngleAxis(Angle + 90, Vector3.forward));
         }
-        if (type == Enemy_Type.Enemy_M)
+        else if (type == Enemy_Type.Enemy_M)
         {
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x + 0.35f, transform.position.y - 0.5f),
+            Instantiate(Info.E_Bullet, new Vector2(transform.position.x + 0.35f, transform.position.y - 0.35f),
+                Quaternion.AngleAxis(Angle + 90, Vector3.forward));
+        }
+        else if (type == Enemy_Type.Enemy_S)
+        {
+            Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y-0.25f),
+                Quaternion.AngleAxis(Angle + 90, Vector3.forward));
+        }
+        else if (type == Enemy_Type.O)
+        {
+            Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y - 0.5f),
                 Quaternion.AngleAxis(Angle + 90, Vector3.forward));
 
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x - 0.35f, transform.position.y - 0.5f),
-               Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-        }
-        if (type == Enemy_Type.Enemy_S)
-        {
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x + 0.35f, transform.position.y - 0.5f),
+            Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y - 0.5f),
                 Quaternion.AngleAxis(Angle + 90, Vector3.forward));
 
-        }
-        if (type == Enemy_Type.O)
-        {
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x + 0.35f, transform.position.y - 0.5f),
-    Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x - 0.35f, transform.position.y - 0.5f),
-               Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x + 0.35f, transform.position.y - 0.5f),
-    Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x - 0.35f, transform.position.y - 0.5f),
-               Quaternion.AngleAxis(Angle + 90, Vector3.forward));
         }
         //Quaternion.AngleAxis(float Angle, Vector3 Axis)
         // ㄴ> Axis[중심축] 을 기준으로, Angle만큼 회전한 회전값을

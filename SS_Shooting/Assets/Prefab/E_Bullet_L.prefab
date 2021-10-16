@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   My_Render: {fileID: 0}
   type: 2
-  Speed: 3
+  Speed: 10
   Bullet_ATK: 0
   Alive_Time: 7
 --- !u!61 &6402080166517916880

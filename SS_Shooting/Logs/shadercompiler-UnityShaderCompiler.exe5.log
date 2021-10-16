@@ -2,3 +2,5 @@ Base path: 'C:/Users/TFG277/Desktop/sd/2020.3.19f1/Editor/Data', plugins path 'C
 Cmd: initializeCompiler
 
 Cmd: shutdown
+
+Quitting shader compiler process
