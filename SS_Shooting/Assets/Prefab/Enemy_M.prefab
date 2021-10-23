@@ -147,7 +147,7 @@ MonoBehaviour:
   type: 1
   Info:
     HP: 0
-    Max_HP: 50
+    Max_HP: 5
     Speed: 3.5
     Shooting_Cool: 1
     Limit_Bullet: 50000
@@ -157,3 +157,4 @@ MonoBehaviour:
     E_Hit_Image: {fileID: -7844560889915226194, guid: 138040323294fd440a3a823e5d70ad01, type: 3}
   Player: {fileID: 0}
   My_Render: {fileID: 0}
+  G_Manager: {fileID: 0}

@@ -58,6 +58,9 @@ public class Enemy_CT : MonoBehaviour
     [Header("객체 컴포넌트")]
     public SpriteRenderer My_Render;
 
+    [Header("적 매니저")]
+    public Game_Manager G_Manager;
+
     void Start() //객체가 생성될 때.
     {
         Component_Get();
@@ -66,9 +69,17 @@ public class Enemy_CT : MonoBehaviour
     
     void Update()
     {
-        transform.Translate(Vector2.down * Info.Speed * Time.deltaTime);
-        //ㄴ 적이 자신의 속도에 맞게 아래로 점점 내려오도록 만들어주겠다.
-        
+        if (type != Enemy_Type.BOSS)
+        {
+            transform.Translate(Vector2.down * Info.Speed * Time.deltaTime);
+            //ㄴ 적이 자신의 속도에 맞게 아래로 점점 내려오도록 만들어주겠다.
+        }
+        else if(type == Enemy_Type.BOSS && transform.position.y > 2.8f)
+        {
+            transform.Translate(Vector2.down * Info.Speed * Time.deltaTime);
+            // ㄴ y좌표가 2.8을 초과할때만 아래로 내려오게 해주겠다.
+        }
+
         if(Info.Shoot_Ready && Info.Limit_Bullet > 0)
         {// ㄴ 총알이 장전된 상태고, 총알 잔량이 0발을 초과할 경우 [1발 이상일 경우]
             
@@ -81,10 +92,11 @@ public class Enemy_CT : MonoBehaviour
 
                 Shoot_Bullet();
 
-                Invoke("Shoot_Cool",Info.Shooting_Cool);
-                //ㄴ 쿨타임만큼 대기한 뒤, 해당 함수를 실행하겠다.
-
-
+                if (type != Enemy_Type.BOSS)
+                {
+                    Invoke("Shoot_Cool", Info.Shooting_Cool);
+                    //ㄴ 쿨타임만큼 대기한 뒤, 해당 함수를 실행하겠다.
+                }
             }
         }
 
@@ -98,6 +110,7 @@ public class Enemy_CT : MonoBehaviour
 
         StartCoroutine(Hit_Effect());
         //ㄴ 그리고, 피격 이벤트 코루틴 함수를 실행하겠다.
+        Enemy_Dead();
     }
 
     IEnumerator Hit_Effect()
@@ -146,19 +159,39 @@ public class Enemy_CT : MonoBehaviour
             Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y-0.25f),
                 Quaternion.AngleAxis(Angle + 90, Vector3.forward));
         }
-        else if (type == Enemy_Type.O)
+        else if (type == Enemy_Type.BOSS)
         {
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y - 0.5f),
-                Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-
-            Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y - 0.5f),
-                Quaternion.AngleAxis(Angle + 90, Vector3.forward));
-
+            StartCoroutine(Boss_Skill());
         }
         //Quaternion.AngleAxis(float Angle, Vector3 Axis)
         // ㄴ> Axis[중심축] 을 기준으로, Angle만큼 회전한 회전값을
         //     반환받는 객체에게 할당해주겠다.
 
+    }
+
+    IEnumerator Boss_Skill()
+    {
+        int Rand = Random.Range(0, 1);
+
+        if(Rand == 0) //1번 패턴
+        {
+            int Main_Angle = 0;
+            int Sub_Angle = 0;
+
+            for(int A = 0; A < 15; A++)
+            {
+                for(int B = 0; B < 30; B++)
+                {
+                    Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y),
+                        Quaternion.AngleAxis(Main_Angle + Sub_Angle, Vector3.forward));
+                }
+                Sub_Angle += 1;
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        Invoke("Shoot_Cool", Info.Shooting_Cool);
+        //패턴이 전부 끝났다면, 쿨타임을 돌리겟다.
     }
 
     void Shoot_Cool() //재장전 함수
@@ -170,12 +203,43 @@ public class Enemy_CT : MonoBehaviour
 
     void Enemy_Dead()
     {
-        if(transform.position.y <= -6.0f || Info.HP <= 0)
-        {//ㄴ y좌표값이 -6 이하이거나, 현재 HP가 0 이하일 경우.
-            StopAllCoroutines();
-            //ㄴ 객체를 파괴하기 전, 실행중인 모든 코루틴 함수를 정지한 뒤, 
-            Destroy(gameObject);
-            //ㄴ 자기 자신을 파괴하겠다.
+        if(type != Enemy_Type.BOSS)
+        {
+
+            if (transform.position.y <= -6.0f)
+            {//ㄴ y좌표값이 -6 이하일 경우.
+                StopAllCoroutines();
+                //ㄴ 객체를 파괴하기 전, 실행중인 모든 코루틴 함수를 정지한 뒤, 
+                G_Manager.Dead_Enemy(gameObject, false); //자연사
+                //ㄴ 적 리스트에서 자신을 제거한 뒤,
+                Destroy(gameObject);
+                //ㄴ 자기 자신을 파괴하겠다.
+            }
+            else if (Info.HP <= 0)
+            {
+                StopAllCoroutines();
+                //ㄴ 객체를 파괴하기 전, 실행중인 모든 코루틴 함수를 정지한 뒤, 
+                G_Manager.Dead_Enemy(gameObject, true); //맞아죽음
+                //ㄴ 적 리스트에서 자신을 제거한 뒤,
+                Destroy(gameObject);
+                //ㄴ 자기 자신을 파괴하겠다.
+            }
+        }
+        else if(type == Enemy_Type.BOSS)
+        {
+            if(Info.HP <= 0)
+            {// ㄴ 보스 객체의 체력이 0 이하일 경우.
+
+                G_Manager.Stage_LV++;
+                //스테이지 레벨을 1 증가시키고
+                G_Manager.Is_Boss_Spawn = false;
+                //보스가 스폰되어있지 않는 상태로 전환한 뒤,
+                G_Manager.Boss_Count = (15 + (G_Manager.Stage_LV - 1));
+                //현재 레벨에 따라 보스 카운트를 1씩 증가시키겠다.
+
+                StopAllCoroutines();
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -189,5 +253,6 @@ public class Enemy_CT : MonoBehaviour
         // ㄴ 히어라키 창의 모든 객체 중 "Player"라는 이름을 가진 객체를 찾아 넣겠다.
         My_Render = GetComponent<SpriteRenderer>();
         // ㄴ 자기 자신이 가지고 있는 <> 컴포넌트를 찾아 할당하겠다.
+        G_Manager = GameObject.Find("Game_Manager").GetComponent<Game_Manager>();
     }
 }
