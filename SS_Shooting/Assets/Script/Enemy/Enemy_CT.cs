@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; //UI 타입을 사용하겠다.
 
 
 //열거체 ( enum ) 란?
@@ -61,12 +62,21 @@ public class Enemy_CT : MonoBehaviour
     [Header("적 매니저")]
     public Game_Manager G_Manager;
 
+    [Header("적 UI정보")]
+    public Slider My_HP_Val; //자신의 체력바 UI
+
     void Start() //객체가 생성될 때.
     {
         Component_Get();
+
+        My_HP_Val = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        // ㄴ 이 객체의 자식의 자식에게 있는 Slider 컴포넌트를 GET하겠다.
+
+        Set_UI();
+        //ㄴ 그리고 감소된 체력에 맞게 UI값을 갱신해주겠다.
     }
 
-    
+
     void Update()
     {
         if (type != Enemy_Type.BOSS)
@@ -83,8 +93,7 @@ public class Enemy_CT : MonoBehaviour
         if(Info.Shoot_Ready && Info.Limit_Bullet > 0)
         {// ㄴ 총알이 장전된 상태고, 총알 잔량이 0발을 초과할 경우 [1발 이상일 경우]
             
-            if(type != Enemy_Type.BOSS)
-            {// ㄴ 이 객체가 BOSS가 아닐 경우.
+
 
                 Info.Shoot_Ready = false; //장전중인 상태로 전환하고, 
 
@@ -98,16 +107,23 @@ public class Enemy_CT : MonoBehaviour
                     //ㄴ 쿨타임만큼 대기한 뒤, 해당 함수를 실행하겠다.
                 }
             }
-        }
+
 
         Enemy_Dead();
+    }
+
+    void Set_UI()
+    {//ㄴ HP의 값이 변경될때마다 호출하여 최신 체력상태를 갱신하는 함수.
+
+        My_HP_Val.value = (Info.HP / Info.Max_HP) * 100f;
     }
 
     public void Hit_Function(int Damage)
     {
         Info.Enemy_Hit(Damage);
         //ㄴ 받아온 데미지 만큼 체력을 감소시키겠다.
-
+        Set_UI();
+        //ㄴ 그리고 감소된 체력에 맞게 UI값을 갱신해주겠다.
         StartCoroutine(Hit_Effect());
         //ㄴ 그리고, 피격 이벤트 코루틴 함수를 실행하겠다.
         Enemy_Dead();
@@ -184,6 +200,9 @@ public class Enemy_CT : MonoBehaviour
                 {
                     Instantiate(Info.E_Bullet, new Vector2(transform.position.x, transform.position.y),
                         Quaternion.AngleAxis(Main_Angle + Sub_Angle, Vector3.forward));
+
+                    Main_Angle += 12;
+
                 }
                 Sub_Angle += 1;
                 yield return new WaitForSeconds(0.1f);
@@ -229,7 +248,8 @@ public class Enemy_CT : MonoBehaviour
         {
             if(Info.HP <= 0)
             {// ㄴ 보스 객체의 체력이 0 이하일 경우.
-
+                G_Manager.Get_Score(G_Manager.Enemy_Boss_Score);
+                // ㄴ 보스가 가지고있는 점수만큼 스코어를 누적해주겠다.
                 G_Manager.Stage_LV++;
                 //스테이지 레벨을 1 증가시키고
                 G_Manager.Is_Boss_Spawn = false;

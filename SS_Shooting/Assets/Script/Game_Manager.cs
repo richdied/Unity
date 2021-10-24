@@ -1,10 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Game_Manager : MonoBehaviour
 {   //ㄴ 게임 내적인 요소들을 수집하고 총괄할 스크립트.
     //   [필드 내의 적 객체정보를 수집하고, 각 객체의 정보를 관리]
+
+    [Header("플레이어 추가정보")]
+    public int Score; //현재 획득점수.
+    public TextMeshProUGUI Score_TMPRO; //점수 UI
+    public int Enemy_S_Score = 10; //각 사이즈 적군의 부여점수
+    public int Enemy_M_Score = 15;
+    public int Enemy_L_Score = 20;
+    public int Enemy_Boss_Score = 200;
 
     [Header("적 스폰 포인트")]
     public float Offset_X_Min;  //적이 스폰된 X좌표 최소값.
@@ -36,11 +45,12 @@ public class Game_Manager : MonoBehaviour
     public bool Is_Boss_Spawn; //보스가 현재 스폰된 상태인가?
     public int Boss_Count;  //이번스테이지의 보스가 생성되기까지 필요한 적 처치 수
 
-    
+
 
     void Start()
     {
         Start_Set();
+        Get_Score(0);
     }
 
     
@@ -50,6 +60,14 @@ public class Game_Manager : MonoBehaviour
         {// ㄴ 보스가 필드에 존재하지 않을 경우에만, 일반 적 객체를 스폰하겠다.
             Enemy_Spawn();
         }
+    }
+
+    public void Get_Score(int Score)
+    {
+        this.Score += Score;
+        // ㄴ 받아온 파라메터를 현재 스코어에 누적해주겠다.
+        Score_TMPRO.text = "SCORE : " + this.Score.ToString();
+        // ㄴ Text UI에 현재 점수 String(문자열) 변환하여 할달해주겠다.
     }
 
     void Enemy_Spawn()
@@ -77,7 +95,18 @@ public class Game_Manager : MonoBehaviour
 
         Enemy_List.Remove(OBJ);
         //ㄴ 파라메터로 받아온 OBJ 객체와 동일한 오브젝트가 Enemy_List에 있다면, 삭제하겠다.
-        if(Hit_Daed) { Boss_Count--; }
+        if(Hit_Daed) { 
+            
+            Boss_Count--;
+
+            Enemy_CT EC = OBJ.GetComponent<Enemy_CT>();
+            //파라메터로 받아온 적 객체의 현재 스크립트 정보를 받아오겠다.
+
+            if(EC.type == Enemy_Type.Enemy_S) { Get_Score(Enemy_S_Score); }
+            else if (EC.type == Enemy_Type.Enemy_M) { Get_Score(Enemy_M_Score); }
+            else if (EC.type == Enemy_Type.Enemy_L) { Get_Score(Enemy_L_Score); }
+            // ㄴ 해당 적의 타입에 맞는 점수를 현재 스코어에 누적시켜주겠다.
+        }
         //ㄴ 만약, 플레이어에게 맞아서 죽었다면, Boss_Count를 1 감소시키겠다.
         Boss_Spawn();
         //ㄴ Boss_Spawn 함수 실행지점.
